@@ -1,18 +1,24 @@
-import argparse
+from argparse import ArgumentParser
 from pathlib import Path
 
-from pykager.lib.git_ import Git
+from pykager.lib import Git, Setup
+from pykager.utils import cached_property
 
 
-class Pykager(argparse.ArgumentParser):
+class Pykager(ArgumentParser):
 
     def __init__(self):
         super().__init__()
         self.add_argument("-i", "--input", help="input directory (default: cwd)")
-        args = self.parse_args()
 
-        if args.input:
-            input_dir = Path(args.input).resolve()
+    @cached_property
+    def args(self):
+        return self.parse_args()
+
+    @cached_property
+    def input_dir(self):
+        if self.args.input:
+            input_dir = Path(self.args.input).resolve()
         elif __name__ == "__main__":
             input_dir = Path.cwd().parent
         else:
@@ -20,20 +26,15 @@ class Pykager(argparse.ArgumentParser):
 
         if not input_dir.is_dir():
             input_dir = input_dir.parent
+        return input_dir
 
-        self.__input_dir = input_dir
-        self.git = Git(self.input_dir)
-        # self.setup_py = SetupPy()
+    @cached_property
+    def git(self):
+        return Git(self.input_dir)
 
-    @property
-    def input_dir(self):
-        return self.__input_dir
-
-    @property
-    def default_name(self):
-        name = self.input_dir.name
-        if any(self.input_dir.glob(name)):
-            return name
+    @cached_property
+    def setup_py(self):
+        return Setup(self.input_dir)
 
 
 if __name__ == "__main__":
