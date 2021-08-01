@@ -43,4 +43,3 @@ class Setup:
                 except (ValueError, SyntaxError):
                     kwargs[key] = value
         return kwargs
-    

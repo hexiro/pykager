@@ -12,6 +12,14 @@ class Pykager(ArgumentParser):
         self.add_argument("-i", "--input", help="input directory (default: cwd)")
 
     @cached_property
+    def git(self):
+        return Git(self.input_dir)
+
+    @cached_property
+    def setup_py(self):
+        return Setup(self.input_dir)
+
+    @cached_property
     def args(self):
         return self.parse_args()
 
@@ -27,14 +35,6 @@ class Pykager(ArgumentParser):
         if not input_dir.is_dir():
             input_dir = input_dir.parent
         return input_dir
-
-    @cached_property
-    def git(self):
-        return Git(self.input_dir)
-
-    @cached_property
-    def setup_py(self):
-        return Setup(self.input_dir)
 
 
 if __name__ == "__main__":
