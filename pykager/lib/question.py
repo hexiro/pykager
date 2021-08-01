@@ -6,7 +6,7 @@ from colorama import Fore
 from ..utils import clear
 
 
-class Writer:
+class Question:
 
     def __init__(self, question: str, options: List[str]):
         self.__question = question
@@ -65,5 +65,5 @@ class Writer:
 
 
 if __name__ == "__main__":
-    w = Writer("what's your favorite color?", ["red", "yellow", "blue"])
-    w.seek_answer()
+    q = Question("what's your favorite color?", ["red", "yellow", "blue"])
+    q.seek_answer()
