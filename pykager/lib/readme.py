@@ -7,15 +7,10 @@ from pykager.utils import cached_property
 class Readme:
     readme_extensions = {
         # as according to https://github.com/github/markup/tree/master#markups
+        # and https://packaging.python.org/guides/making-a-pypi-friendly-readme/#creating-a-readme-file
         ".markdown", ".mdown", ".mkdn", ".md",  # Markdown
-        ".textile",  # Textile
-        ".rdoc",  # RDoc
-        ".org",
-        ".creole",
-        ".mediawiki", ".wiki",
         ".rst",  # reStructuredText
-        ".asciidoc", ".adoc", ".asc",  # AsciiDoc
-        ".pod"
+        ".txt",  # plain text
     }
 
     def __init__(self, directory: Path):
