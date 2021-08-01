@@ -1,3 +1,4 @@
+import sys
 from typing import List
 
 import keyboard
@@ -13,6 +14,7 @@ class Question:
         self.__options = options
         self.__selected = 0
         self.__answered = False
+        self.__has_printed = False
 
     def seek_answer(self):
         self.__answered = False
@@ -26,25 +28,28 @@ class Question:
         self.__answered = True
 
     def write(self):
-        clear()
-        print(f"{Fore.GREEN}? {self.question}")
+        if not self.__has_printed:
+            clear()
+            print(f"{Fore.GREEN}? {self.question}{Fore.RESET}")
+            self.__has_printed = True
+        else:
+            sys.stdout.write("\033[A\033[A")
+            sys.stdout.flush()
+
+        thing = ""
         for index, option in enumerate(self.options):
-            color = Fore.BLUE if index == self.selected else Fore.WHITE
-            print(f"{color}{index + 1} {option}")
-        print(Fore.RESET)
+            thing += f"{Fore.BLUE}> {option}" if index == self.selected else f"{Fore.WHITE}  {option}"
+            thing += Fore.RESET if index + 1 == len(self.options) else "\n"
+
+        sys.stdout.write("\r" + thing)
+        sys.stdout.flush()
 
     def move_up(self):
-        if self.selected < 1:
-            self.__selected = len(self.options) - 1
-        else:
-            self.__selected = self.selected - 1
+        self.__selected = len(self.options) - 1 if self.selected < 1 else self.selected - 1
         self.write()
 
     def move_down(self):
-        if self.selected + 2 > len(self.options):
-            self.__selected = 0
-        else:
-            self.__selected = self.selected + 1
+        self.__selected = 0 if self.selected + 2 > len(self.options) else self.selected + 1
         self.write()
 
     @property
