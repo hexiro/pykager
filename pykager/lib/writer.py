@@ -13,11 +13,16 @@ class Writer:
         self.__options = options
         self.__selected = 0
         self.__answered = False
+
+    def seek_answer(self):
+        self.__answered = False
         self.write()
-        keyboard.on_press_key("up arrow", lambda e: self.move_up())
-        keyboard.on_press_key("down arrow", lambda e: self.move_down())
+        up = keyboard.on_press_key("up arrow", lambda e: self.move_up())
+        down = keyboard.on_press_key("down arrow", lambda e: self.move_down())
         # waits for answer
         input()
+        keyboard.unhook(up)
+        keyboard.unhook(down)
         self.__answered = True
 
     def write(self):
@@ -60,4 +65,5 @@ class Writer:
 
 
 if __name__ == "__main__":
-    Writer("what's your favorite color?", ["red", "yellow", "blue"])
+    w = Writer("what's your favorite color?", ["red", "yellow", "blue"])
+    w.seek_answer()
