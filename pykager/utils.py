@@ -1,8 +1,11 @@
 import platform
 import subprocess
-
 from pathlib import Path
 from typing import List
+
+import colorama
+
+colorama.init()
 
 is_windows = platform.system() == "Windows"
 readme_extensions = {
