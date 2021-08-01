@@ -40,6 +40,11 @@ class Git:
                 git_url = git_url[:-4]
             return git_url
 
+    @cached_property
+    def name(self) -> Optional[str]:
+        if self.url:
+            return self.url.split("/")[-1]
+
 
 if __name__ == "__main__":
     g = Git(r"C:\Users\nathan\Desktop\Programming\python")

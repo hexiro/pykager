@@ -10,6 +10,25 @@ class Pykager(ArgumentParser):
     def __init__(self):
         super().__init__()
         self.add_argument("-i", "--input", help="input directory (default: cwd)")
+        self.name = None
+        self.version = None
+        self.author = None
+        self.author_email = None
+        self.maintainer = None
+        self.maintainer_email = None
+        self.url = None
+        self.license = None
+        self.description = None
+        self.long_description = None
+        self.keywords = None
+        self.platforms = None
+        self.classifiers = None
+        self.download_url = None
+        self.install_requires = None
+        self.python_requires = None
+        self.zip_safe = None
+        self.packages = None
+        self.entry_points = None
 
     @cached_property
     def git(self):
@@ -39,4 +58,3 @@ class Pykager(ArgumentParser):
 
 if __name__ == "__main__":
     p = Pykager()
-    print(p.git.author)

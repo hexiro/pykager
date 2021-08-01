@@ -1,5 +1,6 @@
 import ast
 from pathlib import Path
+from typing import Dict, Any
 
 from pykager.utils import cached_property
 
@@ -17,9 +18,9 @@ class Setup:
         return self.kwargs.get(item)
 
     @cached_property
-    def kwargs(self):
+    def kwargs(self) -> Dict[str, Any]:
         if not self.file.is_file():
-            return
+            return {}
         code = self.file.read_text(encoding="utf8", errors="ignore")
         code = code[code.find("setup("):]
         code = code[6:]
