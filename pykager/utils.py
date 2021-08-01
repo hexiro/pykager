@@ -1,5 +1,7 @@
+import functools
 import platform
 import subprocess
+import sys
 from pathlib import Path
 from typing import List
 
@@ -20,6 +22,16 @@ readme_extensions = {
     ".asciidoc", ".adoc", ".asc",  # AsciiDoc
     ".pod"
 }
+
+
+def cached_property(func):
+    """
+    returns different cache decorator based on python version
+    :type func: function
+    """
+    if sys.version_info > (3, 8):
+        return functools.cached_property(func)
+    return property(functools.lru_cache()(func))
 
 
 def clear():

@@ -32,16 +32,16 @@ class Question:
             clear()
             print(f"{Fore.GREEN}? {self.question}{Fore.RESET}")
             self.__has_printed = True
+            prefix = "\r"
         else:
-            sys.stdout.write("\033[A\033[A")
-            sys.stdout.flush()
+            prefix = "\033[A\033[A\r"
 
         thing = ""
         for index, option in enumerate(self.options):
             thing += f"{Fore.BLUE}> {option}" if index == self.selected else f"{Fore.WHITE}  {option}"
             thing += Fore.RESET if index + 1 == len(self.options) else "\n"
 
-        sys.stdout.write("\r" + thing)
+        sys.stdout.write(prefix + thing)
         sys.stdout.flush()
 
     def move_up(self):
@@ -70,5 +70,5 @@ class Question:
 
 
 if __name__ == "__main__":
-    q = Question("what's your favorite color?", ["red", "yellow", "blue"])
+    q = Question("what's your favorite color", ["red", "yellow", "blue"])
     q.seek_answer()
