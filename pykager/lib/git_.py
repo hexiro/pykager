@@ -28,14 +28,9 @@ class Git:
             return self.repository.head.commit
 
     @cached_property
-    def author(self) -> Optional[str]:
+    def author(self) -> Optional[git.Actor]:
         if self.commit and self.commit.author:
-            return self.commit.author.name
-
-    @cached_property
-    def email(self) -> Optional[str]:
-        if self.commit and self.commit.author:
-            return self.commit.author.email
+            return self.commit.author
 
     @cached_property
     def url(self) -> Optional[str]:
