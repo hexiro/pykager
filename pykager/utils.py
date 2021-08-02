@@ -29,6 +29,6 @@ def clear():
 
 def safe_eval(data: str) -> Any:
     try:
-        ast.literal_eval(data)
+        return ast.literal_eval(data)
     except (ValueError, SyntaxError, TypeError):
         return
