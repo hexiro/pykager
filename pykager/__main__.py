@@ -42,7 +42,6 @@ class Pykager(ArgumentParser):
         self.python_requires = self.setup_py.python_requires
         self.zip_safe = self.setup_py.zip_safe
         self.packages = self.setup_py.packages
-        self.entry_points = self.setup_py.entry_points
 
     @cached_property
     def git(self):
