@@ -1,34 +1,51 @@
 from argparse import ArgumentParser
 from pathlib import Path
 
-from pykager.lib import Git, Setup
+from pykager.lib import Git, Setup, Readme
 from pykager.utils import cached_property
 
 
 class Pykager(ArgumentParser):
+    __slots__ = (
+        "name",
+        "version",
+        "author",
+        "author_email",
+        "url",
+        "license",
+        "description",
+        "long_description",
+        "keywords",
+        "platforms",
+        "classifiers",
+        "download_url",
+        "install_requires",
+        "python_requires",
+        "zip_safe",
+        "packages",
+        "entry_points",
+    )
 
     def __init__(self):
         super().__init__()
         self.add_argument("-i", "--input", help="input directory (default: cwd)")
-        self.name = None
-        self.version = None
-        self.author = None
-        self.author_email = None
-        self.maintainer = None
-        self.maintainer_email = None
-        self.url = None
-        self.license = None
-        self.description = None
+        self.name = self.setup_py.name or self.git.name
+        self.version = self.setup_py.version
+        self.author = self.setup_py.author or self.git.author.name
+        self.author_email = self.setup_py.author_email or self.git.author.email
+        self.url = self.setup_py.url or self.git.url
+        self.license = self.setup_py.license
+        self.description = self.setup_py.description
         self.long_description = None
-        self.keywords = None
-        self.platforms = None
-        self.classifiers = None
-        self.download_url = None
+        self.keywords = self.setup_py.keywords
+        self.platforms = self.setup_py.platforms
+        self.classifiers = self.setup_py.classifiers
+        self.download_url = self.setup_py.download_url
         self.install_requires = None
-        self.python_requires = None
-        self.zip_safe = None
-        self.packages = None
-        self.entry_points = None
+        self.python_requires = self.setup_py.python_requires
+        self.zip_safe = self.setup_py.zip_safe
+        self.packages = self.setup_py.packages
+        self.entry_points = self.setup_py.entry_points
 
     @cached_property
     def git(self):
@@ -37,6 +54,10 @@ class Pykager(ArgumentParser):
     @cached_property
     def setup_py(self):
         return Setup(self.input_dir)
+
+    @cached_property
+    def readme(self):
+        return Readme(self.input_dir)
 
     @cached_property
     def args(self):
@@ -55,6 +76,19 @@ class Pykager(ArgumentParser):
             input_dir = input_dir.parent
         return input_dir
 
+    @property
+    def code(self) -> str:
+        code = "from setuptools import setup\n" \
+               "\n" \
+               "\n" \
+               "setup(\n"
+        for arg in self.__slots__:
+            value = getattr(self, arg)
+            if value is not None:
+                code += f"    {arg}={value},\n"
+        return code + ")"
+
 
 if __name__ == "__main__":
     p = Pykager()
+    print(p.code)
