@@ -2,7 +2,7 @@ import ast
 from pathlib import Path
 from typing import Dict, Any
 
-from pykager.utils import cached_property
+from pykager.utils import cached_property, safe_eval
 
 
 class Setup:
@@ -38,8 +38,7 @@ class Setup:
         for key, value in kwargs.items():
             if value.endswith(","):
                 value = value[:-1]
-            try:
-                kwargs[key] = ast.literal_eval(value)
-            except (ValueError, SyntaxError):
+            value = safe_eval(value)
+            if value is not None:
                 kwargs[key] = value
         return kwargs
