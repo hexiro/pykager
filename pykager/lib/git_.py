@@ -47,5 +47,5 @@ class Git:
 
 
 if __name__ == "__main__":
-    g = Git(r"C:\Users\nathan\Desktop\Programming\python")
-    print(g.commit)
+    g = Git(r"C:\Users\nathan\Desktop\Programming\python\Important Misc\imperial-py")
+    print(g.url)

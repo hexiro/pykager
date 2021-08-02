@@ -1,7 +1,8 @@
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import List
 
-from pykager.lib import Git, Setup, Import
+from pykager.lib import Git, Setup, Import, Init
 from pykager.snippets import Snippet, Requirements, Readme
 from pykager.snippets.packages import Packages
 from pykager.utils import cached_property
@@ -54,6 +55,10 @@ class Pykager:
     def setup_py(self):
         return Setup(self.input_dir)
 
+    @cached_property
+    def init_py(self):
+        return Init(self)
+
     # setup.py
 
     @property
@@ -62,7 +67,7 @@ class Pykager:
 
     @property
     def version(self):
-        return self.setup_py.version
+        return self.setup_py.version or self.init_py.version
 
     @property
     def description(self):
@@ -70,11 +75,11 @@ class Pykager:
 
     @property
     def author(self):
-        return self.setup_py.author or self.git.author.name
+        return self.setup_py.author or self.git.author.name or self.init_py.author
 
     @property
     def author_email(self):
-        return self.setup_py.author_email or self.git.author.email
+        return self.setup_py.author_email or self.init_py.email or self.git.author.email
 
     @property
     def url(self):
@@ -82,7 +87,7 @@ class Pykager:
 
     @property
     def license(self):
-        return self.setup_py.license
+        return self.setup_py.license or self.init_py.license
 
     @property
     def long_description(self):
@@ -117,36 +122,39 @@ class Pykager:
         return Packages(self)
 
     @property
-    def setup_args(self) -> dict:
-        args = ["name", "version", "description", "author", "author_email", "url", "license", "long_description",
+    def setup_args(self) -> List[str]:
+        return ["name", "version", "description", "author", "author_email", "url", "license", "long_description",
                 "long_description_content_type", "keywords", "classifiers", "python_requires", "install_requires",
-                "zip_safe", "packages",
-                ]
-        return {k: getattr(self, f"_{k}") or getattr(self, k) for k in args}
+                "zip_safe", "packages"]
 
     @property
     def code(self) -> str:
         imports = [Import(from_="setuptools", import_="setup")]
 
-        for arg, value in self.setup_args.items():
+        setup_dict = {k: self.argument(k) for k in self.setup_args}
+
+        for arg, value in setup_dict.items():
             if isinstance(value, Snippet):
                 for i in value.imports:
                     imports.append(i)
 
         code = "\n".join(i.code for i in imports) + "\n\n"
 
-        for arg, value in self.setup_args.items():
+        for arg, value in setup_dict.items():
             if isinstance(value, Snippet):
                 code += value.code + "\n"
 
         code += "setup(\n"
 
-        for arg, value in self.setup_args.items():
+        for arg, value in setup_dict.items():
             if value is not None:
                 value = value.variable if isinstance(value, Snippet) else repr(value)
                 code += f"    {arg}={value},\n"
 
         return code + ")\n"
+
+    def argument(self, name: str):
+        return getattr(self, f"_{name}") or getattr(self, name)
 
     def write(self):
         (self.input_dir / "setup.py").write_text(self.code, encoding="utf8", errors="strict")
@@ -155,7 +163,8 @@ class Pykager:
         print("Preparing to generate a setup.py file.\n"
               "Press enter to leave blank or use the default listed.\n"
               "Separate list items with a comma and a space.\n")
-        for arg, default in self.setup_args.items():
+        for arg in self.setup_args:
+            default = self.argument(arg)
             if isinstance(default, Snippet):
                 continue
             if isinstance(default, list):
@@ -187,4 +196,4 @@ def main():
 
 
 if __name__ == "__main__":
-    Pykager()
+    main()
