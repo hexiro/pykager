@@ -100,12 +100,12 @@ class Pykager(ArgumentParser):
                 "setup(\n"
 
         for arg, value in setup_args.items():
-            if isinstance(value, Snippet):
-                value = value.variable
+            value_repr = value.variable if isinstance(value, Snippet) else repr(value)
             if value is not None:
-                code += f"    {arg}={value},\n"
+                code += f"    {arg}={value_repr},\n"
         return code + ")"
 
 
 if __name__ == "__main__":
     p = Pykager()
+    print(p.code)
