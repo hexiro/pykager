@@ -117,6 +117,8 @@ class Pykager(ArgumentParser):
             value = input(f"{arg}{default}: ")
             if ", " in value:
                 value = value.split(", ")
+            elif value.lower() in {"true", "false"}:
+                value = value.lower() == "true"
             if value:
                 setattr(self, arg, value)
 
@@ -138,5 +140,4 @@ def main():
 
 
 if __name__ == "__main__":
-    p = Pykager()
-    p.write()
+    main()

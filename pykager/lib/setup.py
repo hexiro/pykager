@@ -36,11 +36,10 @@ class Setup:
             elif keys:
                 kwargs[keys[-1]] += line
         for key, value in kwargs.items():
-            if value[0] in ["\"", "'", "["]:
-                if value.endswith(","):
-                    value = value[:-1]
-                try:
-                    kwargs[key] = ast.literal_eval(value)
-                except (ValueError, SyntaxError):
-                    kwargs[key] = value
+            if value.endswith(","):
+                value = value[:-1]
+            try:
+                kwargs[key] = ast.literal_eval(value)
+            except (ValueError, SyntaxError):
+                kwargs[key] = value
         return kwargs
