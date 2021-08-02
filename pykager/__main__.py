@@ -82,20 +82,24 @@ class Pykager(ArgumentParser):
         return input_dir
 
     @property
+    def setup_args(self) -> dict:
+        return {arg: getattr(self, arg) for arg in self.__slots__}
+
+    @property
     def code(self) -> str:
         code = "from setuptools import setup\n" \
                "\n"
 
-        arg_dict = {arg: getattr(self, arg) for arg in self.__slots__}
+        setup_args = self.setup_args
 
-        for arg, value in arg_dict.items():
+        for arg, value in setup_args.items():
             if isinstance(value, Snippet):
                 code += value.code
 
         code += "\n" \
                 "setup(\n"
 
-        for arg, value in arg_dict.items():
+        for arg, value in setup_args.items():
             if isinstance(value, Snippet):
                 value = value.variable
             if value is not None:
@@ -105,4 +109,3 @@ class Pykager(ArgumentParser):
 
 if __name__ == "__main__":
     p = Pykager()
-    print(p.code)
