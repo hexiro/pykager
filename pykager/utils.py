@@ -16,6 +16,15 @@ def cached_property(func):
     return property(functools.lru_cache()(func))
 
 
+def is_property(method):
+    """
+    returns true is method is a property or cached_property
+    """
+    if sys.version_info > (3, 8) and isinstance(method, functools.cached_property):
+        return True
+    return isinstance(method, property)
+
+
 def clear():
     """
     Clears the console.
