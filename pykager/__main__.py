@@ -22,7 +22,6 @@ class Pykager(ArgumentParser):
         "python_requires",
         "zip_safe",
         "packages",
-        "entry_points",
     )
 
     def __init__(self):

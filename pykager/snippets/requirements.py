@@ -8,6 +8,7 @@ from pykager.utils import cached_property
 class Requirements(Snippet):
 
     def __init__(self, directory: Path):
+        super().__init__("requirements")
         self.__directory = directory
 
     def __repr__(self):
@@ -26,7 +27,3 @@ class Requirements(Snippet):
     def code(self):
         return f"with open('{self.requirements_file}', 'r') as req_file:\n" \
                f"    requirements = [l for l in req_file.read().splitlines() if l and not l.startswith('#')]\n"
-
-    @property
-    def variable(self):
-        return "requirements"

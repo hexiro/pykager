@@ -22,6 +22,7 @@ class Readme(Snippet):
     }
 
     def __init__(self, directory: Path):
+        super().__init__("readme_file")
         self.__directory = directory
 
     @cached_property
@@ -47,7 +48,3 @@ class Readme(Snippet):
     def code(self):
         return f"with open('{self.readme_file}', encoding='utf-8') as readme_file:\n" \
                "    readme = readme_file.read()\n"
-
-    @property
-    def variable(self):
-        return "readme_file"
