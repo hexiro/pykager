@@ -2,8 +2,6 @@ import functools
 import platform
 import subprocess
 import sys
-from pathlib import Path
-from typing import List
 
 import colorama
 

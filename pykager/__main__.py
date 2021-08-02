@@ -105,7 +105,29 @@ class Pykager(ArgumentParser):
                 code += f"    {arg}={value_repr},\n"
         return code + ")"
 
+    def cli_prompt(self):
+        print("Preparing to generate a setup.py file.\n"
+              "Press enter to leave blank or use the default listed.\n"
+              "Separate list items with a comma and a space.\n")
+        for arg, default in self.setup_args.items():
+            if isinstance(default, list):
+                default = ", ".join(default)
+            default = f" ({default})" if default else ""
+            value = input(f"{arg}{default}: ")
+            if ", " in value:
+                value = value.split(", ")
+            if value:
+                setattr(self, arg, value)
+
+        confirmation = input(
+            f"About to write setup.py\n"
+            "\n"
+            f"{self.code}\n"
+            "\n"
+            "write (yes):"
+        )
+
 
 if __name__ == "__main__":
     p = Pykager()
-    print(p.code)
+    p.cli_prompt()
