@@ -99,7 +99,7 @@ class Pykager(ArgumentParser):
             value_repr = value.variable if isinstance(value, Snippet) else repr(value)
             if value is not None:
                 code += f"    {arg}={value_repr},\n"
-        return code + ")"
+        return code + ")\n"
 
     def write(self):
         (self.input_dir / "setup.py").write_text(self.code, encoding="utf8", errors="strict")
