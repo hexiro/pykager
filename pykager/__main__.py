@@ -17,9 +17,7 @@ class Pykager(ArgumentParser):
         "description",
         "long_description",
         "keywords",
-        "platforms",
         "classifiers",
-        "download_url",
         "install_requires",
         "python_requires",
         "zip_safe",
@@ -39,9 +37,7 @@ class Pykager(ArgumentParser):
         self.description = self.setup_py.description
         self.long_description = None
         self.keywords = self.setup_py.keywords
-        self.platforms = self.setup_py.platforms
         self.classifiers = self.setup_py.classifiers
-        self.download_url = self.setup_py.download_url
         self.install_requires = self.requirements
         self.python_requires = self.setup_py.python_requires
         self.zip_safe = self.setup_py.zip_safe
@@ -113,6 +109,8 @@ class Pykager(ArgumentParser):
               "Press enter to leave blank or use the default listed.\n"
               "Separate list items with a comma and a space.\n")
         for arg, default in self.setup_args.items():
+            if isinstance(default, Snippet):
+                continue
             if isinstance(default, list):
                 default = ", ".join(default)
             default = f" ({default})" if default else ""
@@ -123,11 +121,12 @@ class Pykager(ArgumentParser):
                 setattr(self, arg, value)
 
         confirmation = input(
+            "\n"
             f"About to write setup.py\n"
             "\n"
             f"{self.code}\n"
             "\n"
-            "write (yes): "
+            "is this okay? (yes): "
         )
         if confirmation == "" or confirmation.lower().startswith("y"):
             self.write()
