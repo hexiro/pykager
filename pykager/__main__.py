@@ -138,6 +138,8 @@ class Pykager:
                 for i in value.imports:
                     imports.append(i)
 
+        imports.sort(key=lambda x: (x.from_ or "", x.import_))
+
         code = "\n".join(i.code for i in imports) + "\n\n"
 
         for arg, value in setup_dict.items():
