@@ -105,6 +105,9 @@ class Pykager(ArgumentParser):
                 code += f"    {arg}={value_repr},\n"
         return code + ")"
 
+    def write(self):
+        (self.input_dir / "setup.py").write_text(self.code, encoding="utf8", errors="strict")
+
     def cli_prompt(self):
         print("Preparing to generate a setup.py file.\n"
               "Press enter to leave blank or use the default listed.\n"
@@ -124,8 +127,10 @@ class Pykager(ArgumentParser):
             "\n"
             f"{self.code}\n"
             "\n"
-            "write (yes):"
+            "write (yes): "
         )
+        if confirmation == "" or confirmation.lower().startswith("y"):
+            self.write()
 
 
 if __name__ == "__main__":
