@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import List
+
+from pykager.lib import Import
 
 
 class Snippet(ABC):
@@ -6,8 +9,9 @@ class Snippet(ABC):
     Generate code for kwarg in setup.py
     """
 
-    def __init__(self, variable: str):
+    def __init__(self, variable: str, imports: List[Import] = None):
         self.__variable = variable
+        self.__imports = imports or []
 
     @property
     @abstractmethod
@@ -18,6 +22,10 @@ class Snippet(ABC):
     def variable(self) -> str:
         return self.__variable
 
+    @property
+    def imports(self) -> List[Import]:
+        return self.__imports
+
 
 class DetailedSnippet(Snippet):
     """
@@ -25,11 +33,11 @@ class DetailedSnippet(Snippet):
     Has context of other kwargs
     """
 
-    def __init__(self, pykager, variable: str):
+    def __init__(self, pykager, variable: str, imports: List[Import] = None):
         """
         :type pykager: Pykager
         """
-        super().__init__(variable)
+        super().__init__(variable, imports)
         self.__pykager = pykager
 
     @property

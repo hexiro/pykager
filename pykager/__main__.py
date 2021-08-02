@@ -1,10 +1,9 @@
 from argparse import ArgumentParser
 from pathlib import Path
-from pprint import pprint
 
-from pykager.lib import Git, Setup
+from pykager.lib import Git, Setup, Import
 from pykager.snippets import Snippet, Requirements, Readme
-from pykager.utils import cached_property, is_property
+from pykager.snippets.packages import Packages
 
 
 class Pykager:
@@ -45,7 +44,7 @@ class Pykager:
         self.python_requires = self.__setup_py.python_requires
         self.install_requires = Requirements(self.__input_dir)
         self.zip_safe = self.__setup_py.zip_safe
-        self.packages = self.__setup_py.packages
+        self.packages = Packages(self)
 
     @property
     def setup_args(self) -> dict:
@@ -53,13 +52,18 @@ class Pykager:
 
     @property
     def code(self) -> str:
-        code = "from setuptools import setup\n" \
-               "\n"
+        imports = [Import(from_="setuptools", import_="setup")]
 
         for arg, value in self.setup_args.items():
             if isinstance(value, Snippet):
-                code += value.code
-                code += "\n"
+                for i in value.imports:
+                    imports.append(i)
+
+        code = "\n".join(i.code for i in imports) + "\n\n"
+
+        for arg, value in self.setup_args.items():
+            if isinstance(value, Snippet):
+                code += value.code + "\n"
 
         code += "setup(\n"
 
@@ -109,4 +113,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    p = Pykager()
+    print(p.code)

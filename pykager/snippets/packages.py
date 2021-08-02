@@ -1,12 +1,13 @@
+from pykager.lib import Import
 from pykager.snippets import DetailedSnippet
 
 
 class Packages(DetailedSnippet):
 
     def __init__(self, pykager):
-        super().__init__(pykager, "packages")
+        super().__init__(pykager, "packages", [Import(from_="setuptools", import_=["find_packages"])])
 
     @property
     def code(self):
         name = self.pykager.name
-        return f"['{name}'] + [('{name}.' + x) for x in find_packages(where='{name}')]"
+        return f"packages = ['{name}'] + [('{name}.' + x) for x in find_packages(where='{name}')]\n"
