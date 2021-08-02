@@ -1,8 +1,8 @@
 from argparse import ArgumentParser
 from pathlib import Path
 
-from pykager.lib import Git, Setup, Readme
-from pykager.snippets import Snippet, Requirements
+from pykager.lib import Git, Setup
+from pykager.snippets import Snippet, Requirements, Readme
 from pykager.utils import cached_property
 
 
@@ -35,7 +35,7 @@ class Pykager(ArgumentParser):
         self.url = self.setup_py.url or self.git.url
         self.license = self.setup_py.license
         self.description = self.setup_py.description
-        self.long_description = None
+        self.long_description = self.readme
         self.keywords = self.setup_py.keywords
         self.classifiers = self.setup_py.classifiers
         self.install_requires = self.requirements
@@ -91,9 +91,9 @@ class Pykager(ArgumentParser):
         for arg, value in setup_args.items():
             if isinstance(value, Snippet):
                 code += value.code
+                code += "\n"
 
-        code += "\n" \
-                "setup(\n"
+        code += "setup(\n"
 
         for arg, value in setup_args.items():
             value_repr = value.variable if isinstance(value, Snippet) else repr(value)
@@ -122,7 +122,7 @@ class Pykager(ArgumentParser):
 
         confirmation = input(
             "\n"
-            f"About to write setup.py\n"
+            f"About to write to setup.py\n"
             "\n"
             f"{self.code}\n"
             "\n"
@@ -132,6 +132,11 @@ class Pykager(ArgumentParser):
             self.write()
 
 
-if __name__ == "__main__":
+def main():
     p = Pykager()
     p.cli_prompt()
+
+
+if __name__ == "__main__":
+    p = Pykager()
+    p.write()

@@ -1,10 +1,11 @@
 from pathlib import Path
 from typing import Optional
 
+from pykager.snippets.snippet import Snippet
 from pykager.utils import cached_property
 
 
-class Readme:
+class Readme(Snippet):
     readme_extensions = {
         # as according to https://github.com/github/markup/tree/master#markups
         # and https://packaging.python.org/guides/making-a-pypi-friendly-readme/#creating-a-readme-file
@@ -24,25 +25,29 @@ class Readme:
         self.__directory = directory
 
     @cached_property
-    def readme(self) -> Optional[Path]:
+    def readme_file(self) -> Optional[Path]:
         """
         Finds readme files in the specified directory
         README is case insensitive afaik
         """
         for f in self.directory.glob("*"):
             if f.name.upper().startswith("README") and f.suffix in self.readme_extensions:
-                return f
+                return f.relative_to(self.directory)
 
     @cached_property
     def content_type(self) -> Optional[str]:
-        if self.readme:
-            return self.readme_extensions[self.readme.suffix]
+        if self.readme_file:
+            return self.readme_extensions[self.readme_file.suffix]
 
     @property
     def directory(self):
         return self.__directory
 
+    @property
+    def code(self):
+        return f"with open('{self.readme_file}', encoding='utf-8') as readme_file:\n" \
+               "    readme = readme_file.read()\n"
 
-if __name__ == "__main__":
-    r = Readme(Path.cwd().parents[1])
-    print(r.readme)
+    @property
+    def variable(self):
+        return "readme_file"
