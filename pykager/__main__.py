@@ -33,52 +33,40 @@ class Pykager:
         # setup.py things
         self.name = self.__setup_py.name or self.__git.name
         self.version = self.__setup_py.version
+        self.description = self.__setup_py.description
         self.author = self.__setup_py.author or self.__git.author.name
         self.author_email = self.__setup_py.author_email or self.__git.author.email
         self.url = self.__setup_py.url or self.__git.url
         self.license = self.__setup_py.license
-        self.description = self.__setup_py.description
+        self.long_description = Readme(self.__input_dir)
+        self.long_description_content_type = self.long_description.content_type
         self.keywords = self.__setup_py.keywords
         self.classifiers = self.__setup_py.classifiers
         self.python_requires = self.__setup_py.python_requires
+        self.install_requires = Requirements(self.__input_dir)
         self.zip_safe = self.__setup_py.zip_safe
         self.packages = self.__setup_py.packages
 
-    @cached_property
-    def long_description(self):
-        return Readme(self.__input_dir)
-
-    @cached_property
-    def install_requires(self):
-        return Requirements(self.__input_dir)
-
     @property
     def setup_args(self) -> dict:
-        return {k: v for k, v in self.__dict__.items() if not k.startswith("_") and not isinstance(v, Snippet)}
-
-    @property
-    def snippets(self):
-        data = [(k, v) for k, v in self.__class__.__dict__.items() if
-                is_property(v) and k not in ["snippets", "code", "setup_args"]]
-        return {k: getattr(self, k) for k, v in data if isinstance(getattr(self, k), Snippet)}
+        return {k: v for k, v in self.__dict__.items() if not k.startswith("_")}
 
     @property
     def code(self) -> str:
         code = "from setuptools import setup\n" \
                "\n"
 
-        for arg, value in self.snippets.items():
-            code += value.code
-            code += "\n"
+        for arg, value in self.setup_args.items():
+            if isinstance(value, Snippet):
+                code += value.code
+                code += "\n"
 
         code += "setup(\n"
 
         for arg, value in self.setup_args.items():
             if value is not None:
-                code += f"    {arg}={repr(value)},\n"
-
-        for name, snippet in self.snippets.items():
-            code += f"    {name}={snippet.variable},\n"
+                value = value.variable if isinstance(value, Snippet) else repr(value)
+                code += f"    {arg}={value},\n"
 
         return code + ")\n"
 
