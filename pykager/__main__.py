@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from pykager.lib import Git, Setup, Readme
-from pykager.snippets import Snippet
+from pykager.snippets import Snippet, Requirements
 from pykager.utils import cached_property
 
 
@@ -42,7 +42,7 @@ class Pykager(ArgumentParser):
         self.platforms = self.setup_py.platforms
         self.classifiers = self.setup_py.classifiers
         self.download_url = self.setup_py.download_url
-        self.install_requires = None
+        self.install_requires = self.requirements
         self.python_requires = self.setup_py.python_requires
         self.zip_safe = self.setup_py.zip_safe
         self.packages = self.setup_py.packages
@@ -59,6 +59,10 @@ class Pykager(ArgumentParser):
     @cached_property
     def readme(self):
         return Readme(self.input_dir)
+
+    @cached_property
+    def requirements(self):
+        return Requirements(self.input_dir)
 
     @cached_property
     def args(self):
@@ -87,7 +91,6 @@ class Pykager(ArgumentParser):
         for arg, value in arg_dict.items():
             if isinstance(value, Snippet):
                 code += value.code
-                code += "\n"
 
         code += "\n" \
                 "setup(\n"
