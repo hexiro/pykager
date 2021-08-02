@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from pykager.lib import Git, Setup, Readme
+from pykager.snippets import Snippet
 from pykager.utils import cached_property
 
 
@@ -79,11 +80,21 @@ class Pykager(ArgumentParser):
     @property
     def code(self) -> str:
         code = "from setuptools import setup\n" \
-               "\n" \
-               "\n" \
-               "setup(\n"
-        for arg in self.__slots__:
-            value = getattr(self, arg)
+               "\n"
+
+        arg_dict = {arg: getattr(self, arg) for arg in self.__slots__}
+
+        for arg, value in arg_dict.items():
+            if isinstance(value, Snippet):
+                code += value.code
+                code += "\n"
+
+        code += "\n" \
+                "setup(\n"
+
+        for arg, value in arg_dict.items():
+            if isinstance(value, Snippet):
+                value = value.variable
             if value is not None:
                 code += f"    {arg}={value},\n"
         return code + ")"
