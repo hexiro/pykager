@@ -3,10 +3,6 @@ import platform
 import subprocess
 import sys
 
-import colorama
-
-colorama.init()
-
 is_windows = platform.system() == "Windows"
 
 
