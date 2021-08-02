@@ -1,10 +1,10 @@
 from argparse import ArgumentParser
 from pathlib import Path
-from pprint import pprint
 
 from pykager.lib import Git, Setup, Import
 from pykager.snippets import Snippet, Requirements, Readme
 from pykager.snippets.packages import Packages
+from pykager.utils import cached_property
 
 
 class Pykager:
@@ -15,20 +15,6 @@ class Pykager:
         arg_parser = ArgumentParser()
         arg_parser.add_argument("-i", "--input", help="input directory (default: cwd)")
         self.__args = arg_parser.parse_args()
-
-        if self.__args.input:
-            input_dir = Path(self.__args.input).resolve()
-        elif __name__ == "__main__":
-            input_dir = Path.cwd().parent
-        else:
-            input_dir = Path.cwd()
-
-        if not input_dir.is_dir():
-            input_dir = input_dir.parent
-
-        self.__input_dir = input_dir
-        self.__git = Git(self.__input_dir)
-        self.__setup_py = Setup(self.__input_dir)
 
         # setup.py things
         self._name = None
@@ -47,37 +33,60 @@ class Pykager:
         self._zip_safe = None
         self._packages = None
 
+    @cached_property
+    def input_dir(self):
+        if self.__args.input:
+            input_dir = Path(self.__args.input).resolve()
+        elif __name__ == "__main__":
+            input_dir = Path.cwd().parent
+        else:
+            input_dir = Path.cwd()
+
+        if not input_dir.is_dir():
+            input_dir = input_dir.parent
+        return input_dir
+
+    @cached_property
+    def git(self):
+        return Git(self.input_dir)
+
+    @cached_property
+    def setup_py(self):
+        return Setup(self.input_dir)
+
+    # setup.py
+
     @property
     def name(self):
-        return self.__setup_py.name or self.__git.name
+        return self.setup_py.name or self.git.name
 
     @property
     def version(self):
-        return self.__setup_py.version
+        return self.setup_py.version
 
     @property
     def description(self):
-        return self.__setup_py.description
+        return self.setup_py.description
 
     @property
     def author(self):
-        return self.__setup_py.author or self.__git.author.name
+        return self.setup_py.author or self.git.author.name
 
     @property
     def author_email(self):
-        return self.__setup_py.author_email or self.__git.author.email
+        return self.setup_py.author_email or self.git.author.email
 
     @property
     def url(self):
-        return self.__setup_py.url or self.__git.url
+        return self.setup_py.url or self.git.url
 
     @property
     def license(self):
-        return self.__setup_py.license
+        return self.setup_py.license
 
     @property
     def long_description(self):
-        return Readme(self.__input_dir)
+        return Readme(self.input_dir)
 
     @property
     def long_description_content_type(self):
@@ -85,23 +94,23 @@ class Pykager:
 
     @property
     def keywords(self):
-        return self.__setup_py.keywords
+        return self.setup_py.keywords
 
     @property
     def classifiers(self):
-        return self.__setup_py.classifiers
+        return self.setup_py.classifiers
 
     @property
     def python_requires(self):
-        return self.__setup_py.python_requires
+        return self.setup_py.python_requires
 
     @property
     def install_requires(self):
-        return Requirements(self.__input_dir)
+        return Requirements(self.input_dir)
 
     @property
     def zip_safe(self):
-        return self.__setup_py.zip_safe
+        return self.setup_py.zip_safe
 
     @property
     def packages(self):
@@ -140,7 +149,7 @@ class Pykager:
         return code + ")\n"
 
     def write(self):
-        (self.__input_dir / "setup.py").write_text(self.code, encoding="utf8", errors="strict")
+        (self.input_dir / "setup.py").write_text(self.code, encoding="utf8", errors="strict")
 
     def cli_prompt(self):
         print("Preparing to generate a setup.py file.\n"
@@ -178,4 +187,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    Pykager()
