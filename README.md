@@ -1,14 +1,14 @@
 # pykager
 
-📦 setup.py generator with smart defaults
+setup.py generator with smart defaults
 
-## Showcase
+## 📺 Showcase
 
 the setup.py file generated can be viewed in this project.
 
 ![example showcase gif](https://i.imgur.com/NFxWAMK.gif)
 
-## Installation
+## 📦 Installation
 
 download the latest development build from GitHub
 
