@@ -4,7 +4,7 @@ from typing import List
 
 from .lib import Git, Setup, Import, Init
 from .snippets import Snippet, Requirements, Readme, ReadmeContentType, Packages
-from .utils import cached_property
+from .utils import cached_property, safe_eval
 
 
 class Pykager:
@@ -187,6 +187,10 @@ class Pykager:
                     value = value.split(", ")
                 elif value.lower() in {"true", "false"}:
                     value = value.lower() == "true"
+                else:
+                    eval_value = safe_eval(value)
+                    if eval_value is not None:
+                        value = eval_value
                 if value:
                     setattr(self, "_" + arg, value)
 
