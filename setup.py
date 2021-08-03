@@ -13,7 +13,7 @@ packages = ['pykager'] + [('pykager.' + x) for x in find_packages(where='pykager
 
 setup(
     name='pykager',
-    version='1.0.0b1',
+    version='1.0.0rc1',
     description='setup.py generator with smart defaults',
     author='Hexiro',
     author_email='realhexiro@gmail.com',
