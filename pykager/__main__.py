@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 from pykager.lib import Git, Setup, Import, Init
-from pykager.snippets import Snippet, Requirements, Readme
+from pykager.snippets import Snippet, Requirements, Readme, ReadmeContentType
 from pykager.snippets.packages import Packages
 from pykager.utils import cached_property
 
@@ -95,7 +95,7 @@ class Pykager:
 
     @property
     def long_description_content_type(self):
-        return self.long_description.content_type
+        return ReadmeContentType(self)
 
     @property
     def keywords(self):
@@ -139,7 +139,8 @@ class Pykager:
             if isinstance(value, Snippet) and value.write_code:
                 for i in value.imports:
                     imports.append(i)
-                code += value.code + "\n"
+                if value.variable:
+                    code += value.code + "\n"
 
         imports.sort(key=lambda x: (x.from_ or "", x.import_))
 
@@ -150,12 +151,10 @@ class Pykager:
                 if isinstance(value, Snippet):
                     if not value.write_code:
                         continue
-                    value_code = value.variable
+                    value_code = value.variable or repr(value.code)
                 else:
                     value_code = repr(value)
                 code += f"    {arg}={value_code},\n"
-
-
 
         return code + ")\n"
 

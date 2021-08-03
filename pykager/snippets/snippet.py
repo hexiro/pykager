@@ -9,7 +9,7 @@ class Snippet(ABC):
     Generate code for kwarg in setup.py
     """
 
-    def __init__(self, variable: str, imports: List[Import] = None):
+    def __init__(self, variable: str = None, imports: List[Import] = None):
         self.__variable = variable
         self.__imports = imports or []
 
@@ -38,7 +38,7 @@ class DetailedSnippet(Snippet):
     Has context of other kwargs
     """
 
-    def __init__(self, pykager, variable: str, imports: List[Import] = None):
+    def __init__(self, pykager, variable: str = None, imports: List[Import] = None):
         """
         :type pykager: Pykager
         """

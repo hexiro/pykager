@@ -21,7 +21,7 @@ class Requirements(Snippet):
     @cached_property
     def requirements_file(self) -> Optional[Path]:
         if self.is_file:
-            return (self.directory / "requirements.txt").relative_to(self.directory)
+            return Path("requirements.txt")
 
     @cached_property
     def is_file(self):
