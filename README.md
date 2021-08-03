@@ -1,6 +1,6 @@
 # pykager
 
-setup.py generator with smart defaults
+setup.py generator with [smart defaults](https://github.com/Hexiro/pykager#-smart-defaults)
 
 ## 📺 Showcase
 
@@ -18,7 +18,7 @@ $ pip3 install -U git+https://github.com/Hexiro/pykager
 
 ## 🧠 Smart Defaults
 
-the place where each argument can be fetched from <br/>
+this table shows the place where each argument can be fetched from <br/>
 values set by the user override all defaults
 
 | argument | setup.py | .git | \_\_init\_\_.py | other |
