@@ -14,4 +14,4 @@ class Packages(DetailedSnippet):
 
     @property
     def write_code(self) -> bool:
-        return True
+        return isinstance(self.pykager.name, str)
