@@ -14,12 +14,15 @@ packages = ['pykager'] + [('pykager.' + x) for x in find_packages(where='pykager
 setup(
     name='pykager',
     version='1.0.0b1',
+    description='setup.py generator with smart defaults',
     author='Hexiro',
     author_email='realhexiro@gmail.com',
     url='https://github.com/Hexiro/pykager',
     long_description=readme,
     long_description_content_type='text/markdown',
+    python_requires='>=3.6',
     install_requires=requirements,
+    zip_safe=True,
     packages=packages,
     entry_points={'console_scripts': ['pykager = pykager.__main__:main']},
 )
