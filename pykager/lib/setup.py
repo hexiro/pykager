@@ -30,7 +30,7 @@ class Setup:
         for line in code.splitlines():
             line = line.lstrip()
             keys = list(kwargs.keys())
-            if "=" in line:
+            if "=" in line and line[0] not in ["'", "\""]:
                 key, value = line.split("=", maxsplit=1)
                 kwargs[key] = value
             elif keys:
@@ -38,7 +38,7 @@ class Setup:
         for key, value in kwargs.items():
             if value.endswith(","):
                 value = value[:-1]
-            value = safe_eval(value)
+            print(value, safe_eval(value))
             if value is not None:
-                kwargs[key] = value
+                kwargs[key] = safe_eval(value)
         return kwargs

@@ -33,6 +33,7 @@ class Pykager:
         self._install_requires = None
         self._zip_safe = None
         self._packages = None
+        self._entry_points = None
 
     @cached_property
     def input_dir(self):
@@ -122,10 +123,14 @@ class Pykager:
         return Packages(self)
 
     @property
+    def entry_points(self):
+        return self.setup_py.entry_points
+
+    @property
     def setup_args(self) -> List[str]:
         return ["name", "version", "description", "author", "author_email", "url", "license", "long_description",
                 "long_description_content_type", "keywords", "classifiers", "python_requires", "install_requires",
-                "zip_safe", "packages"]
+                "zip_safe", "packages", "entry_points"]
 
     @property
     def code(self) -> str:
@@ -201,4 +206,4 @@ def main():
 
 
 if __name__ == "__main__":
-    print(Pykager().code)
+    main()

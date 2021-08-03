@@ -1,5 +1,6 @@
 import ast
 import functools
+import json
 import platform
 import subprocess
 import sys
@@ -29,6 +30,10 @@ def clear():
 
 def safe_eval(data: str) -> Any:
     try:
+        return json.loads(data)
+    except json.JSONDecodeError:
+        pass
+    try:
         return ast.literal_eval(data)
     except (ValueError, SyntaxError, TypeError):
-        return
+        pass
