@@ -11,7 +11,7 @@ is_windows = platform.system() == "Windows"
 
 def cached_property(func):
     """
-    returns different cache decorator based on python version
+    returns different cache decorator based on python version.
     :type func: function
     """
     if sys.version_info > (3, 8):
@@ -29,6 +29,11 @@ def clear():
 
 
 def safe_eval(data: str) -> Any:
+    """
+    safest type eval w/o deps.
+    by no means perfect,
+    but data from user's own projects should be safe.
+    """
     try:
         return json.loads(data)
     except json.JSONDecodeError:
