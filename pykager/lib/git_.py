@@ -32,6 +32,16 @@ class Git:
         if self.commit and self.commit.author:
             return self.commit.author
 
+    @property
+    def author_name(self):
+        if self.author:
+            return self.author.name
+
+    @property
+    def author_email(self):
+        if self.author:
+            return self.author.email
+
     @cached_property
     def url(self) -> Optional[str]:
         if self.repository and len(self.repository.remotes) > 0:

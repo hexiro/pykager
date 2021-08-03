@@ -76,11 +76,11 @@ class Pykager:
 
     @property
     def author(self):
-        return self.setup_py.author or self.git.author.name or self.init_py.author
+        return self.setup_py.author or self.git.author_name or self.init_py.author
 
     @property
     def author_email(self):
-        return self.setup_py.author_email or self.init_py.email or self.git.author.email
+        return self.setup_py.author_email or self.init_py.email or self.git.author_email
 
     @property
     def url(self):

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from pykager.utils import safe_eval
 
@@ -24,11 +25,12 @@ class Init:
         return self.__kwargs
 
     @property
-    def init_file(self) -> Path:
-        return self.pykager.input_dir / self.__name / "__init__.py"
+    def init_file(self) -> Optional[Path]:
+        if self.__name:
+            return self.pykager.input_dir / self.__name / "__init__.py"
 
     def find_kwargs(self) -> dict:
-        if not self.init_file.is_file():
+        if not self.init_file or not self.init_file.is_file():
             return {}
         code = self.init_file.read_text(encoding="utf-8", errors="ignore")
         kwargs = {}

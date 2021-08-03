@@ -22,7 +22,7 @@ class Readme(Snippet):
     }
 
     def __init__(self, directory: Path):
-        super().__init__("readme_file")
+        super().__init__("readme")
         self.__directory = directory
 
     @cached_property
