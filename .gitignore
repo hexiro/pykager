@@ -129,3 +129,6 @@ dmypy.json
 
 # PyCharm
 .idea/
+
+# Batch
+reinstall.bat
