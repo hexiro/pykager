@@ -36,6 +36,10 @@ class Readme(Snippet):
                 return f.relative_to(self.directory)
 
     @cached_property
+    def is_file(self):
+        return self.readme_file and (self.directory / self.readme_file).is_file()
+
+    @cached_property
     def content_type(self) -> Optional[str]:
         if self.readme_file:
             return self.readme_extensions[self.readme_file.suffix]
@@ -48,3 +52,7 @@ class Readme(Snippet):
     def code(self):
         return f"with open('{self.readme_file}', encoding='utf-8') as readme_file:\n" \
                "    readme = readme_file.read()\n"
+
+    @property
+    def write_code(self) -> bool:
+        return self.is_file

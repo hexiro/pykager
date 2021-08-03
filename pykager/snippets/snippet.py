@@ -19,6 +19,11 @@ class Snippet(ABC):
         pass
 
     @property
+    @abstractmethod
+    def write_code(self) -> bool:
+        pass
+
+    @property
     def variable(self) -> str:
         return self.__variable
 
@@ -43,6 +48,11 @@ class DetailedSnippet(Snippet):
     @property
     @abstractmethod
     def code(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def write_code(self) -> bool:
         pass
 
     @property

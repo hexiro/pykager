@@ -20,10 +20,18 @@ class Requirements(Snippet):
 
     @cached_property
     def requirements_file(self) -> Optional[Path]:
-        if (self.directory / "requirements.txt").is_file():
+        if self.is_file:
             return (self.directory / "requirements.txt").relative_to(self.directory)
+
+    @cached_property
+    def is_file(self):
+        return (self.directory / "requirements.txt").is_file()
 
     @property
     def code(self):
         return f"with open('{self.requirements_file}', 'r') as req_file:\n" \
                f"    requirements = [l for l in req_file.read().splitlines() if l and not l.startswith('#')]\n"
+
+    @property
+    def write_code(self) -> bool:
+        return self.is_file

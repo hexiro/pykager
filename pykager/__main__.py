@@ -133,25 +133,29 @@ class Pykager:
 
         setup_dict = {k: self.argument(k) for k in self.setup_args}
 
+        code = ""
+
         for arg, value in setup_dict.items():
-            if isinstance(value, Snippet):
+            if isinstance(value, Snippet) and value.write_code:
                 for i in value.imports:
                     imports.append(i)
+                code += value.code + "\n"
 
         imports.sort(key=lambda x: (x.from_ or "", x.import_))
 
-        code = "\n".join(i.code for i in imports) + "\n\n"
-
-        for arg, value in setup_dict.items():
-            if isinstance(value, Snippet):
-                code += value.code + "\n"
-
-        code += "setup(\n"
+        code = "\n".join(i.code for i in imports) + "\n\n" + code + "setup(\n"
 
         for arg, value in setup_dict.items():
             if value is not None:
-                value = value.variable if isinstance(value, Snippet) else repr(value)
-                code += f"    {arg}={value},\n"
+                if isinstance(value, Snippet):
+                    if not value.write_code:
+                        continue
+                    value_code = value.variable
+                else:
+                    value_code = repr(value)
+                code += f"    {arg}={value_code},\n"
+
+
 
         return code + ")\n"
 
@@ -198,4 +202,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    print(Pykager().code)

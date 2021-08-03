@@ -11,3 +11,7 @@ class Packages(DetailedSnippet):
     def code(self):
         name = self.pykager.name
         return f"packages = ['{name}'] + [('{name}.' + x) for x in find_packages(where='{name}')]\n"
+
+    @property
+    def write_code(self) -> bool:
+        return True
