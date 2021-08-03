@@ -175,13 +175,14 @@ class Pykager:
                   "Press enter to leave blank or use the default listed.\n"
                   "Separate list items with a comma and a space.\n")
             for arg in self.setup_args:
+                clean_arg = arg.replace("_", " ")
                 default = self.argument(arg)
                 if isinstance(default, Snippet):
                     continue
                 if isinstance(default, list):
                     default = ", ".join(default)
                 default = f" ({default})" if default else ""
-                value = input(f"{arg}{default}: ")
+                value = input(f"{clean_arg}{default}: ")
                 if ", " in value:
                     value = value.split(", ")
                 elif value.lower() in {"true", "false"}:
