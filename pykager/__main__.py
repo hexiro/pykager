@@ -171,40 +171,43 @@ class Pykager:
         (self.input_dir / "setup.py").write_text(self.code, encoding="utf8", errors="strict")
 
     def cli_prompt(self):
-        print("Preparing to generate a setup.py file.\n"
-              "Press enter to leave blank or use the default listed.\n"
-              "Separate list items with a comma and a space.\n")
-        for arg in self.setup_args:
-            default = self.argument(arg)
-            if isinstance(default, Snippet):
-                continue
-            if isinstance(default, list):
-                default = ", ".join(default)
-            default = f" ({default})" if default else ""
-            value = input(f"{arg}{default}: ")
-            if ", " in value:
-                value = value.split(", ")
-            elif value.lower() in {"true", "false"}:
-                value = value.lower() == "true"
-            if value:
-                setattr(self, "_" + arg, value)
+        try:
+            print("Preparing to generate a setup.py file.\n"
+                  "Press enter to leave blank or use the default listed.\n"
+                  "Separate list items with a comma and a space.\n")
+            for arg in self.setup_args:
+                default = self.argument(arg)
+                if isinstance(default, Snippet):
+                    continue
+                if isinstance(default, list):
+                    default = ", ".join(default)
+                default = f" ({default})" if default else ""
+                value = input(f"{arg}{default}: ")
+                if ", " in value:
+                    value = value.split(", ")
+                elif value.lower() in {"true", "false"}:
+                    value = value.lower() == "true"
+                if value:
+                    setattr(self, "_" + arg, value)
 
-        print()
+            print()
 
-        if self.code.endswith("setup(\n)\n"):
-            print("Not enough information was given to write a setup.py file.\n"
-                  "Aborting.")
-            return
+            if self.code.endswith("setup(\n)\n"):
+                print("Not enough information was given to write a setup.py file.\n"
+                      "Aborting.")
+                return
 
-        confirmation = input(
-            f"About to write to setup.py\n"
-            "\n"
-            f"{self.code}\n"
-            "\n"
-            "is this okay? (yes): "
-        )
-        if confirmation == "" or confirmation.lower().startswith("y"):
-            self.write()
+            confirmation = input(
+                f"About to write to setup.py\n"
+                "\n"
+                f"{self.code}\n"
+                "\n"
+                "is this okay? (yes): "
+            )
+            if confirmation == "" or confirmation.lower().startswith("y"):
+                self.write()
+        except KeyboardInterrupt:
+            pass
 
 
 def main():
