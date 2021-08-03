@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional
 
-from pykager.utils import safe_eval
+from ..utils import safe_eval
 
 
 class Init:

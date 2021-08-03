@@ -1,4 +1,4 @@
-from pykager.snippets.snippet import DetailedSnippet
+from ..snippets.snippet import DetailedSnippet
 
 
 class ReadmeContentType(DetailedSnippet):

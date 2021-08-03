@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Dict, Any
 
-from pykager.utils import cached_property, safe_eval
+from ..utils import cached_property, safe_eval
 
 
 class Setup:

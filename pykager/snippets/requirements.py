@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Optional
 
-from pykager.snippets.snippet import Snippet
-from pykager.utils import cached_property
+from ..snippets.snippet import Snippet
+from ..utils import cached_property
 
 
 class Requirements(Snippet):

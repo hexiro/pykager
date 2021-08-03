@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from pykager.lib import Import
+from ..lib import Import
 
 
 class Snippet(ABC):

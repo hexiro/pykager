@@ -2,10 +2,9 @@ from argparse import ArgumentParser
 from pathlib import Path
 from typing import List
 
-from pykager.lib import Git, Setup, Import, Init
-from pykager.snippets import Snippet, Requirements, Readme, ReadmeContentType
-from pykager.snippets.packages import Packages
-from pykager.utils import cached_property
+from .lib import Git, Setup, Import, Init
+from .snippets import Snippet, Requirements, Readme, ReadmeContentType, Packages
+from .utils import cached_property
 
 
 class Pykager:

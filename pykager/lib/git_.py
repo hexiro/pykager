@@ -3,7 +3,7 @@ from typing import Union, Optional
 
 import git
 
-from pykager.utils import cached_property
+from ..utils import cached_property
 
 
 class Git:

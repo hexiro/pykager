@@ -1,5 +1,5 @@
-from pykager.lib import Import
-from pykager.snippets import DetailedSnippet
+from ..lib import Import
+from ..snippets import DetailedSnippet
 
 
 class Packages(DetailedSnippet):
