@@ -132,7 +132,7 @@ class Pykager:
                 "long_description_content_type", "keywords", "classifiers", "python_requires", "install_requires",
                 "zip_safe", "packages", "entry_points"]
 
-    @property
+    @cached_property
     def code(self) -> str:
         imports = [Import(from_="setuptools", import_="setup")]
 
@@ -189,8 +189,14 @@ class Pykager:
             if value:
                 setattr(self, "_" + arg, value)
 
+        print()
+
+        if self.code.endswith("setup(\n)\n"):
+            print("Not enough information was given to write a setup.py file.\n"
+                  "Aborting.")
+            return
+
         confirmation = input(
-            "\n"
             f"About to write to setup.py\n"
             "\n"
             f"{self.code}\n"
