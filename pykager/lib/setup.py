@@ -37,7 +37,6 @@ class Setup:
         for key, value in kwargs.items():
             if value.endswith(","):
                 value = value[:-1]
-            print(value, safe_eval(value))
             if value is not None:
                 kwargs[key] = safe_eval(value)
         return kwargs
