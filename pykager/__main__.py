@@ -182,15 +182,7 @@ class Pykager:
                 if isinstance(default, list):
                     default = ", ".join(default)
                 default = f" ({default})" if default else ""
-                value = input(f"{clean_arg}{default}: ")
-                if ", " in value:
-                    value = value.split(", ")
-                elif value.lower() in {"true", "false"}:
-                    value = value.lower() == "true"
-                else:
-                    eval_value = safe_eval(value)
-                    if eval_value is not None:
-                        value = eval_value
+                value = safe_eval(input(f"{clean_arg}{default}: "))
                 if value:
                     setattr(self, "_" + arg, value)
 

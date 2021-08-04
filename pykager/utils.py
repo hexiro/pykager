@@ -30,14 +30,23 @@ def clear():
 
 def safe_eval(data: str) -> Any:
     """
-    safest type eval w/o deps.
+    safest type i can manage eval w/o deps.
     by no means perfect,
     but data from user's own projects should be safe.
     """
+    # string-list to list
+    if ", " in data:
+        return data.split(", ")
+    # string-boolean to boolean
+    elif data.lower() in {"true", "false"}:
+        return data.lower() == "true"
+    # json to dict/list
     try:
+        # print(json.loads(data))
         return json.loads(data)
     except json.JSONDecodeError:
         pass
+    # literal eval w/ ast
     try:
         return ast.literal_eval(data)
     except (ValueError, SyntaxError, TypeError):
