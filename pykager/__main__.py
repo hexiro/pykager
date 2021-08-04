@@ -67,7 +67,7 @@ class Pykager:
 
     @property
     def version(self):
-        return self.setup_py.version or self.init_py.version
+        return self.init_py.version or self.setup_py.version
 
     @property
     def description(self):
