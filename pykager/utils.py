@@ -51,3 +51,4 @@ def safe_eval(data: str) -> Any:
         return ast.literal_eval(data)
     except (ValueError, SyntaxError, TypeError):
         pass
+    return data
