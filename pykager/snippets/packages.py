@@ -1,11 +1,10 @@
-from ..lib import Import
 from ..snippets import DetailedSnippet
 
 
 class Packages(DetailedSnippet):
 
     def __init__(self, pykager):
-        super().__init__(pykager, "packages", [Import(from_="setuptools", import_=["find_packages"])])
+        super().__init__(pykager, "packages", "from setuptools import find_packages")
 
     @property
     def code(self):

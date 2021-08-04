@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
-
-from ..lib import Import
+from typing import Union, List
 
 
 class Snippet(ABC):
@@ -9,9 +7,9 @@ class Snippet(ABC):
     Generate code for kwarg in setup.py
     """
 
-    def __init__(self, variable: str = None, imports: List[Import] = None):
+    def __init__(self, variable: str = None, imports: Union[str, List[str]] = None):
         self.__variable = variable
-        self.__imports = imports or []
+        self.__imports = imports
 
     @property
     @abstractmethod
@@ -24,11 +22,11 @@ class Snippet(ABC):
         pass
 
     @property
-    def variable(self) -> str:
+    def variable(self):
         return self.__variable
 
     @property
-    def imports(self) -> List[Import]:
+    def imports(self):
         return self.__imports
 
 
@@ -38,7 +36,7 @@ class DetailedSnippet(Snippet):
     Has context of other kwargs
     """
 
-    def __init__(self, pykager, variable: str = None, imports: List[Import] = None):
+    def __init__(self, pykager, variable: str = None, imports: Union[str, List[str]] = None):
         """
         :type pykager: Pykager
         """
