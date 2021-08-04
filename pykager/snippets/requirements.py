@@ -30,7 +30,7 @@ class Requirements(Snippet):
     @property
     def code(self):
         return f"with open('{self.requirements_file}', 'r') as req_file:\n" \
-               f"    requirements = [l for l in req_file.read().splitlines() if l and not l.startswith('#')]\n"
+               f"    requirements = [x for x in req_file.read().splitlines() if x and not x.startswith('#')]\n"
 
     @property
     def write_code(self) -> bool:
