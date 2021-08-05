@@ -38,8 +38,6 @@ class Pykager:
     def input_dir(self):
         if self.__args.input:
             input_dir = Path(self.__args.input).resolve()
-        elif __name__ == "__main__":
-            input_dir = Path.cwd().parent
         else:
             input_dir = Path.cwd()
 
