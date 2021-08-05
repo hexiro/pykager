@@ -200,7 +200,7 @@ class Pykager:
             )
             if confirmation == "" or confirmation.lower().startswith("y"):
                 self.write()
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, OSError):
             pass
 
 
