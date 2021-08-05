@@ -186,7 +186,7 @@ class Pykager:
 
             print()
 
-            if not (self.name and self.version):
+            if not (self.name and self.version and self.packages):
                 print("Not enough information was provided to write a setup.py file.\n"
                       "Aborting.")
                 return
