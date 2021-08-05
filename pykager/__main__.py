@@ -34,6 +34,12 @@ class Pykager:
         self._packages = None
         self._entry_points = None
 
+    def __getattr__(self, item):
+        if item in ["name", "version", "description", "author", "author_email", "url", "license", "long_description",
+                    "long_description_content_type", "keywords", "classifiers", "python_requires", "install_requires",
+                    "zip_safe", "packages", "entry_points"]:
+            return getattr(self, f"_{item}") or getattr(self, f"{item}_")
+
     @cached_property
     def input_dir(self):
         if self.__args.input:
@@ -60,67 +66,67 @@ class Pykager:
     # setup.py
 
     @property
-    def name(self):
+    def name_(self):
         return self.setup_py.name or self.git.name
 
     @property
-    def version(self):
+    def version_(self):
         return self.init_py.version or self.setup_py.version or "1.0.0"
 
     @property
-    def description(self):
+    def description_(self):
         return self.setup_py.description
 
     @property
-    def author(self):
+    def author_(self):
         return self.setup_py.author or self.git.author_name or self.init_py.author
 
     @property
-    def author_email(self):
+    def author_email_(self):
         return self.setup_py.author_email or self.init_py.email or self.git.author_email
 
     @property
-    def url(self):
+    def url_(self):
         return self.setup_py.url or self.git.url
 
     @property
-    def license(self):
+    def license_(self):
         return self.setup_py.license or self.init_py.license
 
     @property
-    def long_description(self):
+    def long_description_(self):
         return Readme(self.input_dir)
 
     @property
-    def long_description_content_type(self):
+    def long_description_content_type_(self):
         return ReadmeContentType(self)
 
     @property
-    def keywords(self):
+    def keywords_(self):
         return self.setup_py.keywords
 
     @property
-    def classifiers(self):
+    def classifiers_(self):
         return self.setup_py.classifiers
 
     @property
-    def python_requires(self):
+    def python_requires_(self):
         return self.setup_py.python_requires
 
     @property
-    def install_requires(self):
+    def install_requires_(self):
         return Requirements(self.input_dir)
 
     @property
-    def zip_safe(self):
+    def zip_safe_(self):
         return self.setup_py.zip_safe
 
     @property
-    def packages(self):
+    def packages_(self):
         return Packages(self)
 
     @property
-    def entry_points(self):
+    def entry_points_(self):
         return self.setup_py.entry_points
 
     @property
@@ -133,7 +139,7 @@ class Pykager:
     def code(self) -> str:
         imports = Imports(["from setuptools import setup"])
 
-        setup_dict = {k: self.argument(k) for k in self.setup_args}
+        setup_dict = {k: getattr(self, k) for k in self.setup_args}
 
         code = ""
 
@@ -158,9 +164,6 @@ class Pykager:
 
         return code + ")\n"
 
-    def argument(self, name: str):
-        return getattr(self, f"_{name}") or getattr(self, name)
-
     def write(self):
         (self.input_dir / "setup.py").write_text(self.code, encoding="utf8", errors="strict")
 
@@ -171,7 +174,7 @@ class Pykager:
                   "Separate list items with a comma and a space.\n")
             for arg in self.setup_args:
                 clean_arg = arg.replace("_", " ")
-                default = self.argument(arg)
+                default = getattr(self, arg)
                 if isinstance(default, Snippet):
                     continue
                 if isinstance(default, list):
@@ -179,12 +182,12 @@ class Pykager:
                 default = f" ({default})" if default else ""
                 value = safe_eval(input(f"{clean_arg}{default}: "))
                 if value:
-                    setattr(self, "_" + arg, value)
+                    setattr(self, f"_{arg}", value)
 
             print()
 
-            if self.code.endswith("setup(\n)\n"):
-                print("Not enough information was given to write a setup.py file.\n"
+            if not (self.name and self.version):
+                print("Not enough information was provided to write a setup.py file.\n"
                       "Aborting.")
                 return
 

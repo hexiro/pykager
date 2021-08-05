@@ -8,7 +8,7 @@ class Init:
 
     def __init__(self, pykager):
         self.__pykager = pykager
-        self.__name = self.pykager.argument("name")
+        self.__name = self.pykager.name
         self.__kwargs = self.find_kwargs()
 
     def __getattr__(self, item):
@@ -20,7 +20,7 @@ class Init:
 
     @property
     def kwargs(self):
-        if self.__name != self.pykager.argument("name"):
+        if self.__name != self.pykager.name:
             self.__kwargs = self.find_kwargs()
         return self.__kwargs
 
