@@ -40,6 +40,13 @@ values set by the user override all defaults
 | packages                      |❌️|❌️|❌️|setuptools|
 | entry_points                  |✔️|❌|❌|❌|
 
+## 📅 Planned Features
+- pretty formatting lists & dicts
+- packages_dir arg to set base folder of packages
+- writing `__init__.py` `__author__`, `__email__`, etc
+- detecting popular licenses as a smart default
+- generating classifiers
+
 ## 🐞 Contributing
 
 This project has a lot of room for improvement. Mainly cleaning up code, more modularity, and bug fixes. <br/>
