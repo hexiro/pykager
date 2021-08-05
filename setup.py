@@ -7,13 +7,13 @@ with open('README.md', encoding='utf-8') as readme_file:
     readme = readme_file.read()
 
 with open('requirements.txt', 'r') as req_file:
-    requirements = [l for l in req_file.read().splitlines() if l and not l.startswith('#')]
+    requirements = [x for x in req_file.read().splitlines() if x and not x.startswith('#')]
 
 packages = ['pykager'] + [('pykager.' + x) for x in find_packages(where='pykager')]
 
 setup(
     name='pykager',
-    version='1.0.0rc1',
+    version='1.0.0',
     description='setup.py generator with smart defaults',
     author='Hexiro',
     author_email='realhexiro@gmail.com',
